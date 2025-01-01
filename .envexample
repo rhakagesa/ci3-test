@@ -1,0 +1,6 @@
+BASE_URL='http://localhost/'
+DB_HOSTNAME='localhost'
+DB_USERNAME=''
+DB_PASSWORD=''
+DB_NAME=''
+DB_DRIVER=''
