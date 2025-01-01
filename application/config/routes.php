@@ -57,5 +57,9 @@ $route['users']['POST'] = 'user/adduser';
 $route['users/(:num)']['POST'] = 'user/updateuser/$1';
 $route['users/(:num)']['DELETE'] = 'user/deleteuser/$1';
 
+$route['auth/login']['POST'] = 'authentication/login';
+$route['auth/logout']['GET'] = 'authentication/logout';
+$route['auth/me']['GET'] = 'authentication/currentuser';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

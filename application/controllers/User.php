@@ -59,15 +59,19 @@ class User extends CI_Controller {
        $this->form_validation->set_rules($this->validationAddUser);
 
        if($this->form_validation->run() == FALSE){
-            header('Content-Type: application/json');
-            http_response_code(400);
-            echo json_encode(
-                array(
-                    'success' => FALSE,
-                    'error' => array(
-                        'message' => validation_errors()
-                )));
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                ->set_output(
+                    json_encode(
+                        array(
+                            'success' => FALSE,
+                            'error' => array('message' => validation_errors())
+                        )));
+           
         } else {
+
             $data = array(
                 'name' => $this->input->post('name'),
                 'username' => $this->input->post('username'),
@@ -78,48 +82,58 @@ class User extends CI_Controller {
             $result = $this->user->addUser($data);
 
             if($result == FALSE){
-                header('Content-Type: application/json');
-                http_response_code(500);
-                echo json_encode(array(
-                    'success' => FALSE,
-                    'error' => array(
-                        'message' => 'Server error, while adding user'
-                    )
-                    ));
+
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(500)
+                    ->set_output(
+                        json_encode(
+                            array(
+                                'success' => FALSE,
+                                'error' => array('message' => 'Server error, while adding user')
+                            )));
             }
 
-            header('Content-Type: application/json');
-            http_response_code(200);
-            echo json_encode(array(
-                'success' => TRUE,
-                'data' => array(
-                    'message' => 'User added successfully'
-                )
-            ));
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(
+                    json_encode(
+                        array(
+                            'success' => TRUE,
+                            'data' => array('message' => 'User added successfully')
+                            )));
         }
     
     }
 
     public function getAllUsers(){
+
         $result = $this->user->getAllUsers();
 
         if($result == FALSE){
-            header('Content-Type: application/json');
-            http_response_code(404);
-            echo json_encode(array(
-                'success' => FALSE,
-                'error' => array(
-                    'message' => 'Users not found'
-                )
-            ));
-        } else {
-            header('Content-Type: application/json');
-            http_response_code(200);
-            echo json_encode(array(
-                'success' => TRUE,
-                'data' => $result
-            ));
-        }
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(404)
+                ->set_output(
+                    json_encode(
+                        array(
+                            'success' => FALSE,
+                            'error' => array('message' => 'Users not found')
+                        )));
+        } 
+        
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(
+                json_encode(
+                    array(
+                        'success' => TRUE,
+                        'data' => $result
+                    )));
+        
     }
 
     public function getUser($id){
@@ -127,22 +141,27 @@ class User extends CI_Controller {
         $result = $this->user->getUserById($id);
 
         if($result == FALSE){
-            header('Content-Type: application/json');
-            http_response_code(404);
-            echo json_encode(array(
-                'success' => FALSE,
-                'error' => array(
-                    'message' => 'User not found'
-                )
-            ));
-        } else {
-            header('Content-Type: application/json');
-            http_response_code(200);
-            echo json_encode(array(
-                'success' => TRUE,
-                'data' => $result
-            ));
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(404)
+                ->set_output(
+                    json_encode(array(
+                        'success' => FALSE,
+                        'error' => array('message' => 'User not found')
+                    )));
+           
         }
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(
+                json_encode(array(
+                    'success' => TRUE,
+                    'data' => $result
+                )));
+        
 
     }
 
@@ -151,15 +170,18 @@ class User extends CI_Controller {
         $this->form_validation->set_rules($this->validationUpdateUser);
 
         if($this->form_validation->run() == FALSE || $id == NULL){
-            header('Content-Type: application/json');
-            http_response_code(400);
-            echo json_encode(
-                array(
-                    'success' => FALSE,
-                    'error' => array(
-                        'message' => $id == NULL? 'User id is required' : validation_errors()
-                )));
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                ->set_output(
+                    json_encode(
+                        array(
+                            'success' => FALSE,
+                            'error' => array('message' => $id == NULL? 'User id is required' : validation_errors())
+                        )));
         } else {
+
             $data = array(
                 'name' => $this->input->post('name'),
                 'username' => $this->input->post('username'),
@@ -167,65 +189,71 @@ class User extends CI_Controller {
                 'role' => $this->input->post('role')
             );
 
+            $this->getUser($id);
             $result = $this->user->updateUser($id, $data);
 
             if($result == FALSE){
-                header('Content-Type: application/json');
-                http_response_code(500);
-                echo json_encode(array(
-                    'success' => FALSE,
-                    'error' => array(
-                        'message' => 'Server error, while updating user'
-                    )
-                    ));
-            }
-
-            header('Content-Type: application/json');
-            http_response_code(200);
-            echo json_encode(array(
-                'success' => TRUE,
-                'data' => array(
-                    'message' => 'User updated successfully'
-                )
-            ));
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(500)
+                    ->set_output(
+                        json_encode(array(
+                            'success' => FALSE,
+                            'error' => array('message' => 'Server error, while updating user')
+                            )));
+               
+            } 
+                
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(
+                    json_encode(array(
+                            'success' => TRUE,
+                            'data' => array('message' => 'User updated successfully')
+                    )));
         }
-    
     }
+    
+    
 
-    public function deleteUser(){
-        $id = $this->uri->segment(3);
-
+    public function deleteUser($id){
+       
         if($id == NULL){
-            header('Content-Type: application/json');
-            http_response_code(400);
-            echo json_encode(
-                array(
-                    'success' => FALSE,
-                    'error' => array(
-                        'message' => 'User id is required'
-                )));
+
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                ->set_output(
+                    json_encode(array(
+                        'success' => FALSE,
+                        'error' => array('message' => 'User id is required')
+                    )));
+
         } else {
+
+            $existsUser = $this->user->getUserById($id);
             $result = $this->user->deleteUser($id);
 
-            if($result == FALSE){
-                header('Content-Type: application/json');
-                http_response_code(500);
-                echo json_encode(array(
-                    'success' => FALSE,
-                    'error' => array(
-                        'message' => 'Server error, while deleting user'
-                    )
-                    ));
+            if($result == FALSE || $existsUser == FALSE){
+                return $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header($result == FALSE ? 500 : 404)
+                    ->set_output(
+                        json_encode(array(
+                            'success' => FALSE,
+                            'error' => array('message' => $result == FALSE ? 'Server error, while deleting user' : 'User not found')
+                        )));
             }
 
-            header('Content-Type: application/json');
-            http_response_code(200);
-            echo json_encode(array(
-                'success' => TRUE,
-                'data' => array(
-                    'message' => 'User deleted successfully'
-                )
-            ));
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(200)
+                ->set_output(
+                    json_encode(array(
+                        'success' => TRUE,
+                        'data' => array('message' => 'User deleted successfully')
+                    )));
         }
     }
 }

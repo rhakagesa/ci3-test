@@ -8,7 +8,18 @@ class User_model extends CI_Model {
     }
     
     public function getUserById($id){
-        $result = $this->db->select('name, username, role')->where('id', $id)->get('user');
+        $result = $this->db->select('id, name, username, role, last_login')->where('id', $id)->get('user');
+        
+        if($result->num_rows() == 0){
+            return FALSE;
+        }
+
+        return $result->row();
+
+    }
+
+    public function getUserByUsername($username){
+        $result = $this->db->select('id ,name, username, password, role, last_login')->where('username', $username)->get('user');
         
         if($result->num_rows() == 0){
             return FALSE;
@@ -19,7 +30,7 @@ class User_model extends CI_Model {
     }
 
     public function getAllUsers(){
-        $result = $this->db->select('name, username, role')->get('user');
+        $result = $this->db->select('id, name, username, role, last_login')->get('user');
 
         if($result->num_rows() == 0){
             return FALSE;

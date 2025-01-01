@@ -11,3 +11,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/userguide3/general/hooks.html
 |
 */
+$hook['post_controller'] = array(
+    'class'    => 'Authorization',
+    'function' => 'authorize',
+    'filename' => 'Authorization.php',
+    'filepath' => 'hooks',
+);
