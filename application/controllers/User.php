@@ -122,9 +122,8 @@ class User extends CI_Controller {
         }
     }
 
-    public function getUser(){
-        $id = $this->uri->segment(3);
-        
+    public function getUser($id){
+
         $result = $this->user->getUserById($id);
 
         if($result == FALSE){
@@ -147,9 +146,8 @@ class User extends CI_Controller {
 
     }
 
-    public function updateUser(){
-        $id = $this->uri->segment(3);
-
+    public function updateUser($id){
+      
         $this->form_validation->set_rules($this->validationUpdateUser);
 
         if($this->form_validation->run() == FALSE || $id == NULL){
